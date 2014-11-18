@@ -1,0 +1,13 @@
+.as
+.git
+deps
+docs
+ebin
+log
+rel
+build_html.iced
+erl_crash.dump
+hosts
+monopolyclub.com
+.erlang.mk.packages*
+.rebar

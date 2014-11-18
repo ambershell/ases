@@ -1,0 +1,21 @@
+%% vim:ft=erlang
+{application, ases, [
+	{description, "AmberShell event streams"},
+	{vsn, "0.1.0"},
+	{modules, []},
+	{registered, []},
+	{applications, [
+		kernel,
+		stdlib,
+		crypto,
+		ranch,
+		cowlib,
+		cowboy,
+		sync
+	]},
+	{mod, {ases_app, []}},
+	{env, [
+		%{listen, [{port, 80}, {ip, {88, 198, 35, 58}}]}
+		{listen, [{port, 9001}, {ip, {127, 0, 0, 1}}]}
+	]}
+]}.
