@@ -21,7 +21,6 @@
 -export([stream_list/1]).
 -export([new/2]).
 -export([new/1]).
--export([on/1]).
 
 -export([start_link/0]).
 
@@ -34,10 +33,12 @@
 -export([terminate/2]).
 -export([code_change/3]).
 
+-include("ases.hrl").
 -include("def.hrl").
 -include("log.hrl").
 
 -define(tab, begin {_Pid, Tab} = ets:lookup(?tab_list, self()), Tab end).
+-define(events, [connection_nil]).
 %%%===================================================================
 %%% API
 %%%===================================================================
@@ -72,9 +73,6 @@ dispatch(Id, [Stream | Msg]) ->
 		Pid -> Pid ! Msg, ok
 	end.
 
-on(Event) ->
-	ases_connections:on(Event).
-
 stream_list(Id) ->
 	[Name || {Name, _Pid} <- ets:tab2list(?tab_streams)] ++
 	[Name || {_Id, Name, _Pid} <- ets:lookup(?tab_fibers, Id)].
@@ -98,7 +96,7 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-	on(connection_nil),
+	?on(?events),
 	{ok, ok}.
 
 handle_call(Request, From, State) ->
@@ -118,6 +116,7 @@ handle_info(Info, State) ->
 	{noreply, State}.
 
 terminate(Reason, State) ->
+	?off(?events),
 	?log_terminate,
 	ok.
 

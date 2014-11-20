@@ -4,6 +4,7 @@
 -module(ases_sup).
 -behaviour(supervisor).
 
+-include("ases.hrl").
 -include("def.hrl").
 
 %% API.

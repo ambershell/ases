@@ -25,6 +25,7 @@
 -export([terminate/2]).
 -export([code_change/3]).
 
+-include("ases.hrl").
 -include("def.hrl").
 -include("log.hrl").
 
@@ -32,31 +33,26 @@
 	connection_nil
 ]).
 
--define(on(Event), ases_connections:on(Event)).
--define(inc(Id), ases_counters:inc(Id)).
--define(connect(Id), ases_connections:obj(Id)).
--define(insert(Id, Msg), ets:insert(?tab_messages, {Id, ?inc(Id), Msg})).
--define(lookup(Id), ets:lookup(?tab_messages, Id)).
--define(delete(Id), ets:delete(?tab_messages, Id)).
--define(delete_obj(Obj), ets:delete_obj(?tab_messages, Obj)).
-
 %%%===================================================================
 %%% API
 %%%===================================================================
 
 send(Id, Msg) ->
-	case ?connect(Id) of
-		{_Id, Pid, _Type, online, _Time} -> ?insert(Id, Msg), Pid ! delivery;
-		{_Id, _Pid, _Type, offline, _Time} -> ?insert(Id, Msg);
+	case ases_connections:obj(Id) of
+		{_Id, Pid, _Type, online, _Time} ->
+			ets:insert(?tab_messages, {Id, ases_counters:inc(Id), Msg}),
+			Pid ! delivery;
+		{_Id, _Pid, _Type, offline, _Time} ->
+			ets:insert(?tab_messages, {Id, ases_counters:inc(Id), Msg});
 		nil -> nil
 	end.
 
 get(Id)->
-	[[Counter | Msg] || {_Id, Counter, Msg} <- ?lookup(Id)].
+	[[Counter | Msg] || {_Id, Counter, Msg} <- ets:lookup(?tab_messages, Id)].
 
 clear(Id, Last)->
-	[?delete_obj(Obj) || {_Id, Counter, _Msg} = Obj
-		<- ?lookup(Id), Counter =< Last ].
+	[ets:delete_obj(?tab_messages, Obj) || {_Id, Counter, _Msg} = Obj
+		<- ets:lookup(?tab_messages, Id), Counter =< Last ].
 
 start_link() ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
@@ -67,7 +63,7 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-	[?on(E) || E <- ?events],
+	?on(?events),
 	{ok, ok}.
 
 handle_call(Request, From, State) ->
@@ -79,7 +75,7 @@ handle_cast(Request, State) ->
 	{noreply, State}.
 
 handle_info({connection_nil, {Id, _Type}}, _State) ->
-	?delete(Id),
+	ets:delete(?tab_messages, Id),
 	{noreply, ok};
 
 handle_info(Info, State) ->
@@ -87,6 +83,7 @@ handle_info(Info, State) ->
 	{noreply, State}.
 
 terminate(Reason, State) ->
+	?off(?events),
 	?log_terminate,
 	ok.
 

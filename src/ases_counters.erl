@@ -28,6 +28,7 @@
 -export([terminate/2]).
 -export([code_change/3]).
 
+-include("ases.hrl").
 -include("def.hrl").
 -include("log.hrl").
 
@@ -44,8 +45,6 @@
 	connection_off,
 	connection_nil
 ]).
-
--define(on(Event), ases_connections:on(Event)).
 
 %%%===================================================================
 %%% API
@@ -82,7 +81,7 @@ start_link() ->
 
 init([]) ->
 	[new(C) || C <- ?counters],
-	[?on(E) || E <- ?events],
+	?on(?events),
 	{ok, ok}.
 
 handle_call(Request, From, State) ->
@@ -138,6 +137,7 @@ handle_info(Info, State) ->
 	{noreply, State}.
 
 terminate(Reason, State) ->
+	?off(?events),
 	?log_terminate,
 	ok.
 

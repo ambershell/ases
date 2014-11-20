@@ -20,8 +20,8 @@
 -export([type/1]).
 -export([state/1]).
 
--export([on/1]).
--export([off/1]).
+-export([add_event_listener/1]).
+-export([del_event_listener/1]).
 
 -export([start_link/0]).
 
@@ -33,6 +33,7 @@
 -export([terminate/2]).
 -export([code_change/3]).
 
+-include("ases.hrl").
 -include("def.hrl").
 -include("log.hrl").
 
@@ -90,10 +91,10 @@ state(Id) ->
 		[{_Id, _Pid, _Type, State, _Time}] -> State
 	end.
 
-on(Event)->
+add_event_listener(Event)->
 	ets:insert(?tab_listeners, {Event, self()}).
 
-off(Event)->
+del_event_listener(Event)->
 	ets:delete_object(?tab_listeners, {Event, self()}).
 
 start_link() ->

@@ -68,26 +68,3 @@ terminate(Reason, Req, {Id, _TTL} = State) ->
 	ases_connections:disconnect(Id, websocket),
 	?log_terminate_ws,
 	ok.
-
-% reply(Frame, Req, State) ->
-% 	% OutFrame = {binary, make_uid()},
-% 	OutFrame = {text, jsonx:encode(Frame)},
-% 	{reply, OutFrame, Req, State, hibernate}.
-
-% ok(Req, State) ->
-% 	{ok, Req, State, hibernate}.
-
-% websocket_handle(InFrame, Req, State) ->
-% 	{ok, Req, State}
-% 	{ok, Req, State, hibernate}
-% 	{reply, OutFrame | [OutFrame], Req, State}
-% 	{reply, OutFrame | [OutFrame], Req, State, hibernate}
-% 	{shutdown, Req, State}
-
-% websocket_info(Info, Req, State) ->
-% 	{ok, Req, State}
-% 	{ok, Req, State, hibernate}
-% 	{reply, OutFrame | [OutFrame], Req, State}
-% 	{reply, OutFrame | [OutFrame], Req, State, hibernate}
-% 	{shutdown, Req, State}
-

@@ -17,15 +17,6 @@
 }).
 
 %% ETS
--define(tab_counters,    ases_counters).
--define(tab_messages,    ases_messages).
--define(tab_connections, ases_connections).
--define(tab_listeners,   ases_event_listeners).
--define(tab_streams,     ases_streams).
--define(tab_stream,      ases_stream).
--define(tab_list,        ases_stream_list).
--define(tab_fibers,      ases_fibers).
-
 -define(ets_set(Name),
 	ets:new(Name, [
 		set,

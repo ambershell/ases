@@ -1,6 +1,6 @@
 %% vim:ft=erlang
 {application, ases, [
-	{description, "AmberShell event streams"},
+	{description, "AmberShell extended streamer"},
 	{vsn, "0.1.0"},
 	{modules, []},
 	{registered, []},
