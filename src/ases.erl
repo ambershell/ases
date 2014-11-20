@@ -37,6 +37,7 @@
 -include("def.hrl").
 -include("log.hrl").
 
+
 -define(tab, begin {_Pid, Tab} = ets:lookup(?tab_list, self()), Tab end).
 -define(events, [connection_nil]).
 %%%===================================================================

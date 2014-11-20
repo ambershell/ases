@@ -11,6 +11,7 @@
 		ranch,
 		cowlib,
 		cowboy,
+		alog,
 		sync
 	]},
 	{mod, {ases_app, []}},
