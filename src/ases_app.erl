@@ -14,6 +14,12 @@ start() ->
 	application:ensure_all_started(ases).
 
 start(_Type, _Args) ->
+	ok = alog_control:add_logger({syslog_log, alog_syslog}),
+    ok = alog_control:add_new_flow(
+		{mod, ['_']},
+		{'=<', debug},
+		[{{syslog_log, alog_syslog}, alog_syslog}]
+	),
 	{ok, Listen} = application:get_env(ases, listen),
 	Dispatch = cowboy_router:compile([
 		{'_', [

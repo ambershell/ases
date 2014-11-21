@@ -1,5 +1,4 @@
 #!/bin/sh
-erl -name ases@127.0.0.1 -pa ebin deps/*/ebin deps/*/deps/*/ebin \
-	-config ases -s ases_app
+erl -name ases@127.0.0.1 -pa ebin deps/*/ebin deps/*/deps/*/ebin -s ases_app
 
 
