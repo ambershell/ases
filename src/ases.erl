@@ -81,8 +81,8 @@ stream_list(Id) ->
 new(Name, IdList) ->
 	Tab = ?ets_stream,
 	ets:insert(?tab_list, {self(), Tab}),
-	[etc:insert(Tab, {id, Id}) || Id <- IdList],
-	[etc:insert(?tab_fibers, {Id, Name, self()}) || Id <- IdList].
+	[ets:insert(Tab, {id, Id}) || Id <- IdList],
+	[ets:insert(?tab_fibers, {Id, Name, self()}) || Id <- IdList].
 
 new(Name) ->
 	ets:insert(?tab_streams, {Name, self()}),
